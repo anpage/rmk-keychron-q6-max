@@ -2,7 +2,7 @@
   "name": "Keychron Q6 Max ANSI Knob",
   "vendorId": "0x3434",
   "productId": "0x0860",
-  "keycodes": ["qmk_lighting"],
+  "lighting": "qmk_rgblight",
   "matrix": { "rows": 6, "cols": 20 },
   "layouts": {
     "keymap": [
