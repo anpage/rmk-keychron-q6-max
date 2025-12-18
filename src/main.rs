@@ -54,7 +54,11 @@ async fn main(_spawner: Spawner) {
     );
 
     // Pin config
-    let (row_pins, col_pins) = config_matrix_pins_stm32!(peripherals: p, input: [PA9, PB8, PB13, PB12], output: [PA13, PA14, PA15]);
+    let (row_pins, col_pins) = config_matrix_pins_stm32!(
+        peripherals: p,
+        input: [PC12, PD2, PB3, PB4, PB5, PB6],
+        output: [PC6, PC7, PC8, PA13, PA14, PA15, PC10, PC11, PC13, PC14, PC15, PC0, PC1, PC2, PC3, PA0, PA1, PA2, PA3, PB10]
+    );
 
     // Use internal flash to emulate eeprom
     let flash = async_flash_wrapper(Flash::new_blocking(p.FLASH));
