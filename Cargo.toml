@@ -30,7 +30,6 @@ rmk = { version = "0.8.1", default-features = false, features = [
     "host",
     "vial",
     "vial_lock",
-    "storage",
     "defmt",
 ] }
 

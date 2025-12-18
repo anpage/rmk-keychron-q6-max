@@ -8,7 +8,6 @@ mod vial;
 
 use defmt::info;
 use embassy_executor::Spawner;
-use embassy_stm32::flash::Flash;
 use embassy_stm32::gpio::{Input, Output};
 use embassy_stm32::peripherals::USB_OTG_FS;
 use embassy_stm32::rcc;
@@ -17,14 +16,13 @@ use embassy_stm32::usb::{Driver, InterruptHandler};
 use embassy_stm32::{Config, bind_interrupts, time::Hertz};
 use keymap::{COL, ROW};
 use rmk::channel::EVENT_CHANNEL;
-use rmk::config::{BehaviorConfig, PositionalConfig, RmkConfig, StorageConfig, VialConfig};
+use rmk::config::{BehaviorConfig, PositionalConfig, RmkConfig, VialConfig};
 use rmk::debounce::default_debouncer::DefaultDebouncer;
 use rmk::futures::future::join3;
 use rmk::input_device::Runnable;
 use rmk::keyboard::Keyboard;
 use rmk::matrix::Matrix;
-use rmk::storage::async_flash_wrapper;
-use rmk::{initialize_keymap_and_storage, run_devices, run_rmk};
+use rmk::{initialize_keymap, run_devices, run_rmk};
 use static_cell::StaticCell;
 use vial::{VIAL_KEYBOARD_DEF, VIAL_KEYBOARD_ID};
 use {defmt_rtt as _, panic_probe as _};
@@ -80,24 +78,18 @@ async fn main(_spawner: Spawner) {
         output: [PC6, PC7, PC8, PA13, PA14, PA15, PC10, PC11, PC13, PC14, PC15, PC0, PC1, PC2, PC3, PA0, PA1, PA2, PA3, PB10]
     );
 
-    // Use internal flash to emulate eeprom
-    let flash = async_flash_wrapper(Flash::new_blocking(p.FLASH));
-
     // Keyboard config
     let rmk_config = RmkConfig {
         vial_config: VialConfig::new(VIAL_KEYBOARD_ID, VIAL_KEYBOARD_DEF, &[(0, 0), (1, 1)]),
         ..Default::default()
     };
 
-    // Initialize the storage and keymap
+    // Initialize the keymap
     let mut default_keymap = keymap::get_default_keymap();
     let mut behavior_config = BehaviorConfig::default();
-    let storage_config = StorageConfig::default();
     let mut per_key_config = PositionalConfig::default();
-    let (keymap, mut storage) = initialize_keymap_and_storage(
+    let keymap = initialize_keymap(
         &mut default_keymap,
-        flash,
-        &storage_config,
         &mut behavior_config,
         &mut per_key_config,
     )
@@ -114,7 +106,7 @@ async fn main(_spawner: Spawner) {
             (matrix) => EVENT_CHANNEL,
         ),
         keyboard.run(),
-        run_rmk(&keymap, driver, &mut storage, rmk_config),
+        run_rmk(&keymap, driver, rmk_config),
     )
     .await;
 }
