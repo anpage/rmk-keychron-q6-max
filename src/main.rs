@@ -11,8 +11,10 @@ use embassy_executor::Spawner;
 use embassy_stm32::flash::Flash;
 use embassy_stm32::gpio::{Input, Output};
 use embassy_stm32::peripherals::USB_OTG_FS;
+use embassy_stm32::rcc;
+use embassy_stm32::rcc::mux;
 use embassy_stm32::usb::{Driver, InterruptHandler};
-use embassy_stm32::{Config, bind_interrupts};
+use embassy_stm32::{Config, bind_interrupts, time::Hertz};
 use keymap::{COL, ROW};
 use rmk::channel::EVENT_CHANNEL;
 use rmk::config::{BehaviorConfig, PositionalConfig, RmkConfig, StorageConfig, VialConfig};
@@ -35,7 +37,25 @@ bind_interrupts!(struct Irqs {
 async fn main(_spawner: Spawner) {
     info!("RMK start!");
     // RCC config
-    let config = Config::default();
+    let mut config = Config::default();
+
+    config.rcc.hse = Some(rcc::Hse {
+        freq: Hertz(16_000_000),
+        mode: rcc::HseMode::Oscillator,
+    });
+    config.rcc.pll_src = rcc::PllSource::HSE;
+    config.rcc.pll = Some(rcc::Pll {
+        prediv: rcc::PllPreDiv::DIV8,
+        mul: rcc::PllMul::MUL96,
+        divp: Some(rcc::PllPDiv::DIV4),
+        divq: Some(rcc::PllQDiv::DIV4),
+        divr: None,
+    });
+    config.rcc.sys = rcc::Sysclk::PLL1_P;
+    config.rcc.ahb_pre = rcc::AHBPrescaler::DIV1;
+    config.rcc.apb1_pre = rcc::APBPrescaler::DIV4;
+    config.rcc.apb2_pre = rcc::APBPrescaler::DIV2;
+    config.rcc.mux.clk48sel = mux::Clk48sel::PLL1_Q;
 
     // Initialize peripherals
     let p = embassy_stm32::init(config);
