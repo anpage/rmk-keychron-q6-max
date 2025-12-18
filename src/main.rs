@@ -72,10 +72,10 @@ async fn main(_spawner: Spawner) {
     );
 
     // Pin config
-    let (row_pins, col_pins) = config_matrix_pins_stm32!(
+    let (col_pins, row_pins) = config_matrix_pins_stm32!(
         peripherals: p,
-        input: [PC12, PD2, PB3, PB4, PB5, PB6],
-        output: [PC6, PC7, PC8, PA13, PA14, PA15, PC10, PC11, PC13, PC14, PC15, PC0, PC1, PC2, PC3, PA0, PA1, PA2, PA3, PB10]
+        input: [PC6, PC7, PC8, PA13, PA14, PA15, PC10, PC11, PC13, PC14, PC15, PC0, PC1, PC2, PC3, PA0, PA1, PA2, PA3, PB10],
+        output: [PC12, PD2, PB3, PB4, PB5, PB6]
     );
 
     // Keyboard config
@@ -97,7 +97,7 @@ async fn main(_spawner: Spawner) {
 
     // Initialize the matrix + keyboard
     let debouncer = DefaultDebouncer::new();
-    let mut matrix = Matrix::<_, _, _, ROW, COL, true>::new(row_pins, col_pins, debouncer);
+    let mut matrix = Matrix::<_, _, _, ROW, COL, false>::new(row_pins, col_pins, debouncer);
     let mut keyboard = Keyboard::new(&keymap);
 
     // Start
