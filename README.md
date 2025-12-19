@@ -14,7 +14,7 @@ These are goals for this project, but not necessarily the only goals:
 
 - [x] USB connectivity
 - [x] Persistent layout configuration through Vial
-- [ ] Rotary encoder (knob) support
+- [x] Rotary encoder (knob) support
 - [ ] LED Control
 - [ ] Mac/Windows Layout Switch
 - [ ] Bluetooth connectivity

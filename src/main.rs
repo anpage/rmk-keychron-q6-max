@@ -27,7 +27,7 @@ use crate::flash16k::Flash16K;
 use defmt::info;
 use embassy_executor::Spawner;
 use embassy_stm32::flash::Flash;
-use embassy_stm32::gpio::{Input, Output};
+use embassy_stm32::gpio::{Input, Output, Pull};
 use embassy_stm32::peripherals::USB_OTG_FS;
 use embassy_stm32::rcc;
 use embassy_stm32::rcc::mux;
@@ -39,10 +39,11 @@ use rmk::config::{BehaviorConfig, PositionalConfig, RmkConfig, StorageConfig, Vi
 use rmk::debounce::default_debouncer::DefaultDebouncer;
 use rmk::futures::future::join3;
 use rmk::input_device::Runnable;
+use rmk::input_device::rotary_encoder::RotaryEncoder;
 use rmk::keyboard::Keyboard;
 use rmk::matrix::Matrix;
 use rmk::storage::async_flash_wrapper;
-use rmk::{initialize_keymap_and_storage, run_devices, run_rmk};
+use rmk::{initialize_encoder_keymap_and_storage, run_devices, run_rmk};
 use static_cell::StaticCell;
 use vial::{VIAL_KEYBOARD_DEF, VIAL_KEYBOARD_ID};
 
@@ -99,6 +100,11 @@ async fn main(_spawner: Spawner) {
         output: [PC12, PD2, PB3, PB4, PB5, PB6]
     );
 
+    // Rotary encoder config
+    let pin_a = Input::new(p.PB14, Pull::None);
+    let pin_b = Input::new(p.PB15, Pull::None);
+    let mut encoder = RotaryEncoder::with_resolution(pin_a, pin_b, 4, true, 0);
+
     // Use internal flash to emulate eeprom, wrapped to report 16KB erase size
     let flash = async_flash_wrapper(Flash16K(Flash::new_blocking(p.FLASH)));
 
@@ -110,6 +116,7 @@ async fn main(_spawner: Spawner) {
 
     // Initialize the storage and keymap
     let mut default_keymap = keymap::get_default_keymap();
+    let mut default_encoder_map = keymap::get_default_encoder_map();
     let mut behavior_config = BehaviorConfig::default();
     let storage_config = StorageConfig {
         // Start at sector 1, 0x4000 from the start of the FLASH region
@@ -118,8 +125,9 @@ async fn main(_spawner: Spawner) {
         ..Default::default()
     };
     let mut per_key_config = PositionalConfig::default();
-    let (keymap, mut storage) = initialize_keymap_and_storage(
+    let (keymap, mut storage) = initialize_encoder_keymap_and_storage(
         &mut default_keymap,
+        &mut default_encoder_map,
         flash,
         &storage_config,
         &mut behavior_config,
@@ -135,7 +143,7 @@ async fn main(_spawner: Spawner) {
     // Start
     join3(
         run_devices! (
-            (matrix) => EVENT_CHANNEL,
+            (matrix, encoder) => EVENT_CHANNEL,
         ),
         keyboard.run(),
         run_rmk(&keymap, driver, &mut storage, rmk_config),

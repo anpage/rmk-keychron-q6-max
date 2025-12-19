@@ -14,11 +14,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-use rmk::types::action::KeyAction;
-use rmk::{a, k, layer, mo};
+use rmk::types::action::{EncoderAction, KeyAction};
+use rmk::{a, encoder, k, layer, mo};
 pub(crate) const COL: usize = 20;
 pub(crate) const ROW: usize = 6;
 pub(crate) const NUM_LAYER: usize = 4;
+pub(crate) const NUM_ENCODER: usize = 1;
 
 // TODO: Macros for macOS: screenshot, Siri
 // TODO: Macros for Windows: Task View, File Explorer, Cortana/Copilot
@@ -66,5 +67,14 @@ pub const fn get_default_keymap() -> [[[KeyAction; COL]; ROW]; NUM_LAYER] {
             [a!(Transparent), a!(No),             a!(Transparent),   a!(Transparent),    a!(Transparent),    a!(Transparent), a!(No/*BattLvl*/), a!(Transparent),    a!(Transparent),    a!(Transparent),    a!(Transparent), a!(Transparent),  a!(No),           a!(Transparent), a!(No),               a!(Transparent), a!(No),             a!(Transparent), a!(Transparent), a!(Transparent)],
             [a!(Transparent), a!(Transparent),    a!(Transparent),   a!(No),             a!(No),             a!(No),          a!(Transparent),   a!(No),             a!(No),             a!(No),             a!(Transparent), a!(Transparent),  a!(No),           a!(Transparent), a!(Transparent),      a!(Transparent), a!(Transparent),    a!(No),          a!(Transparent), a!(Transparent)]
         ]),
+    ]
+}
+
+pub const fn get_default_encoder_map() -> [[EncoderAction; NUM_ENCODER]; NUM_LAYER] {
+    [
+        [encoder!(k!(KbVolumeUp), k!(KbVolumeDown))],
+        [encoder!(k!(KbVolumeUp), k!(KbVolumeDown))],
+        [encoder!(k!(KbVolumeUp), k!(KbVolumeDown))],
+        [encoder!(k!(KbVolumeUp), k!(KbVolumeDown))],
     ]
 }
