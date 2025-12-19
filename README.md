@@ -13,7 +13,7 @@ See [RMK's roadmap](https://rmk.rs/docs/development/roadmap.html) for upstream f
 These are goals for this project, but not necessarily the only goals:
 
 - [x] USB connectivity
-- [x] Persistent layout cofiguration through Vial
+- [x] Persistent layout configuration through Vial
 - [ ] Rotary encoder (knob) support
 - [ ] LED Control
 - [ ] Mac/Windows Layout Switch
