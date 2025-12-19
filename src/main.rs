@@ -3,11 +3,14 @@
 
 #[macro_use]
 mod macros;
+mod flash16k;
 mod keymap;
 mod vial;
 
+use crate::flash16k::Flash16K;
 use defmt::info;
 use embassy_executor::Spawner;
+use embassy_stm32::flash::Flash;
 use embassy_stm32::gpio::{Input, Output};
 use embassy_stm32::peripherals::USB_OTG_FS;
 use embassy_stm32::rcc;
@@ -16,15 +19,17 @@ use embassy_stm32::usb::{Driver, InterruptHandler};
 use embassy_stm32::{Config, bind_interrupts, time::Hertz};
 use keymap::{COL, ROW};
 use rmk::channel::EVENT_CHANNEL;
-use rmk::config::{BehaviorConfig, PositionalConfig, RmkConfig, VialConfig};
+use rmk::config::{BehaviorConfig, PositionalConfig, RmkConfig, StorageConfig, VialConfig};
 use rmk::debounce::default_debouncer::DefaultDebouncer;
 use rmk::futures::future::join3;
 use rmk::input_device::Runnable;
 use rmk::keyboard::Keyboard;
 use rmk::matrix::Matrix;
-use rmk::{initialize_keymap, run_devices, run_rmk};
+use rmk::storage::async_flash_wrapper;
+use rmk::{initialize_keymap_and_storage, run_devices, run_rmk};
 use static_cell::StaticCell;
 use vial::{VIAL_KEYBOARD_DEF, VIAL_KEYBOARD_ID};
+
 use {defmt_rtt as _, panic_probe as _};
 
 bind_interrupts!(struct Irqs {
@@ -78,18 +83,29 @@ async fn main(_spawner: Spawner) {
         output: [PC12, PD2, PB3, PB4, PB5, PB6]
     );
 
+    // Use internal flash to emulate eeprom, wrapped to report 16KB erase size
+    let flash = async_flash_wrapper(Flash16K(Flash::new_blocking(p.FLASH)));
+
     // Keyboard config
     let rmk_config = RmkConfig {
         vial_config: VialConfig::new(VIAL_KEYBOARD_ID, VIAL_KEYBOARD_DEF, &[(0, 0), (1, 1)]),
         ..Default::default()
     };
 
-    // Initialize the keymap
+    // Initialize the storage and keymap
     let mut default_keymap = keymap::get_default_keymap();
     let mut behavior_config = BehaviorConfig::default();
+    let storage_config = StorageConfig {
+        // Start at sector 1, 0x4000 from the start of the FLASH region
+        start_addr: 0x4000,
+        num_sectors: 2,
+        ..Default::default()
+    };
     let mut per_key_config = PositionalConfig::default();
-    let keymap = initialize_keymap(
+    let (keymap, mut storage) = initialize_keymap_and_storage(
         &mut default_keymap,
+        flash,
+        &storage_config,
         &mut behavior_config,
         &mut per_key_config,
     )
@@ -106,7 +122,7 @@ async fn main(_spawner: Spawner) {
             (matrix) => EVENT_CHANNEL,
         ),
         keyboard.run(),
-        run_rmk(&keymap, driver, rmk_config),
+        run_rmk(&keymap, driver, &mut storage, rmk_config),
     )
     .await;
 }

@@ -30,8 +30,10 @@ rmk = { git = "https://github.com/HaoboGu/rmk", rev = "8b7ce24a974cc50246d608cdc
     "host",
     "vial",
     "vial_lock",
+    "storage",
     "defmt",
 ] }
+embedded-storage = "0.3.1"
 
 [build-dependencies]
 xz2 = "0.1.7"
