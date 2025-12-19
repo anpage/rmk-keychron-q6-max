@@ -26,7 +26,7 @@ static_cell = "2"
 defmt = "1.0"
 defmt-rtt = "1.1"
 panic-probe = { version = "1.0", features = ["print-defmt"] }
-rmk = { git = "https://github.com/HaoboGu/rmk", rev = "8b7ce24a974cc50246d608cdc79c8881a7301720", default-features = false, features = [
+rmk = { version = "0.8.2", default-features = false, features = [
     "host",
     "vial",
     "vial_lock",
