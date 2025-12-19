@@ -16,7 +16,7 @@ These are goals for this project, but not necessarily the only goals:
 - [x] Persistent layout configuration through Vial
 - [x] Rotary encoder (knob) support
 - [ ] LED Control
-- [ ] Mac/Windows Layout Switch
+- [x] Mac/Windows Layout Switch
 - [ ] Bluetooth connectivity
 
 ## Requirements

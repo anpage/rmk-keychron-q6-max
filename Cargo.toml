@@ -34,6 +34,7 @@ rmk = { version = "0.8.2", default-features = false, features = [
     "defmt",
 ] }
 embedded-storage = "0.3.1"
+embedded-hal = "1.0.0"
 
 [build-dependencies]
 xz2 = "0.1.7"

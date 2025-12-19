@@ -15,7 +15,7 @@
 //
 
 use rmk::types::action::{EncoderAction, KeyAction};
-use rmk::{a, encoder, k, layer, mo};
+use rmk::{a, df, encoder, k, layer, mo};
 pub(crate) const COL: usize = 20;
 pub(crate) const ROW: usize = 6;
 pub(crate) const NUM_LAYER: usize = 4;
@@ -35,7 +35,7 @@ pub const fn get_default_keymap() -> [[[KeyAction; COL]; ROW]; NUM_LAYER] {
             [k!(Tab),         k!(Q),              k!(W),             k!(E),              k!(R),              k!(T),           k!(Y),             k!(U),              k!(I),              k!(O),              k!(P),           k!(LeftBracket),  k!(RightBracket), k!(Backslash),   k!(Delete),           k!(End),         k!(PageDown),       k!(Kp7),         k!(Kp8),         k!(Kp9)        ],
             [k!(CapsLock),    k!(A),              k!(S),             k!(D),              k!(F),              k!(G),           k!(H),             k!(J),              k!(K),              k!(L),              k!(Semicolon),   k!(Quote),        k!(Enter),        k!(F16),         k!(KpMinus),          k!(KpPlus),      k!(KpEnter),        k!(Kp4),         k!(Kp5),         k!(Kp6)        ],
             [k!(LShift),      a!(No),             k!(Z),             k!(X),              k!(C),              k!(V),           k!(B),             k!(N),              k!(M),              k!(Comma),          k!(Dot),         k!(Slash),        a!(No),           k!(RShift),      a!(No),               k!(Up),          a!(No),             k!(Kp1),         k!(Kp2),         k!(Kp3)        ],
-            [k!(LCtrl),       k!(LAlt),           k!(LGui),          a!(No),             a!(No),             a!(No),          k!(Space),         a!(No),             a!(No),             a!(No),             k!(RGui),        k!(RAlt),         mo!(1),           k!(RCtrl),       k!(Left),             k!(Down),        k!(Right),          a!(No),          k!(Kp0),         k!(KpDot)      ]
+            [k!(LCtrl),       k!(LAlt),           k!(LGui),          df!(0),             df!(2),             a!(No),          k!(Space),         a!(No),             a!(No),             a!(No),             k!(RGui),        k!(RAlt),         mo!(1),           k!(RCtrl),       k!(Left),             k!(Down),        k!(Right),          a!(No),          k!(Kp0),         k!(KpDot)      ]
         ]),
 
         // Layer 1: Fn layer (Mac)
@@ -45,7 +45,7 @@ pub const fn get_default_keymap() -> [[[KeyAction; COL]; ROW]; NUM_LAYER] {
             [k!(RgbTog),      k!(RgbModeForward), k!(RgbVai),        k!(RgbVai),         k!(RgbHui),         k!(RgbSpi),      a!(Transparent),   a!(Transparent),    a!(Transparent),    a!(Transparent),    a!(Transparent), a!(Transparent),  a!(Transparent),  a!(Transparent), a!(Transparent),      a!(Transparent), a!(Transparent),    a!(Transparent), a!(Transparent), a!(Transparent)],
             [a!(Transparent), k!(RgbModeReverse), k!(RgbVad),        k!(RgbVad),         k!(RgbHud),         k!(RgbSpd),      a!(Transparent),   a!(Transparent),    a!(Transparent),    a!(Transparent),    a!(Transparent), a!(Transparent),  a!(Transparent),  a!(Transparent), a!(Transparent),      a!(Transparent), a!(Transparent),    a!(Transparent), a!(Transparent), a!(Transparent)],
             [a!(Transparent), a!(No),             a!(Transparent),   a!(Transparent),    a!(Transparent),    a!(Transparent), a!(No/*BattLvl*/), a!(Transparent),    a!(Transparent),    a!(Transparent),    a!(Transparent), a!(Transparent),  a!(No),           a!(Transparent), a!(No),               a!(Transparent), a!(No),             a!(Transparent), a!(Transparent), a!(Transparent)],
-            [a!(Transparent), a!(Transparent),    a!(Transparent),   a!(No),             a!(No),             a!(No),          a!(Transparent),   a!(No),             a!(No),             a!(No),             a!(Transparent), a!(Transparent),  a!(No),           a!(Transparent), a!(Transparent),      a!(Transparent), a!(Transparent),    a!(No),          a!(Transparent), a!(Transparent)]
+            [a!(Transparent), a!(Transparent),    a!(Transparent),   a!(Transparent),    a!(Transparent),    a!(No),          a!(Transparent),   a!(No),             a!(No),             a!(No),             a!(Transparent), a!(Transparent),  a!(No),           a!(Transparent), a!(Transparent),      a!(Transparent), a!(Transparent),    a!(No),          a!(Transparent), a!(Transparent)]
         ]),
 
         // Layer 2: Base layer (Windows)
@@ -55,7 +55,7 @@ pub const fn get_default_keymap() -> [[[KeyAction; COL]; ROW]; NUM_LAYER] {
             [k!(Tab),         k!(Q),              k!(W),             k!(E),              k!(R),              k!(T),           k!(Y),             k!(U),              k!(I),              k!(O),              k!(P),           k!(LeftBracket),  k!(RightBracket), k!(Backslash),   k!(Delete),           k!(End),         k!(PageDown),       k!(Kp7),         k!(Kp8),         k!(Kp9)        ],
             [k!(CapsLock),    k!(A),              k!(S),             k!(D),              k!(F),              k!(G),           k!(H),             k!(J),              k!(K),              k!(L),              k!(Semicolon),   k!(Quote),        k!(Enter),        a!(Transparent), k!(KpMinus),          k!(KpPlus),      k!(KpEnter),        k!(Kp4),         k!(Kp5),         k!(Kp6)        ],
             [k!(LShift),      a!(No),             k!(Z),             k!(X),              k!(C),              k!(V),           k!(B),             k!(N),              k!(M),              k!(Comma),          k!(Dot),         k!(Slash),        a!(No),           k!(RShift),      a!(No),               k!(Up),          a!(No),             k!(Kp1),         k!(Kp2),         k!(Kp3)        ],
-            [k!(LCtrl),       k!(LGui),           k!(LAlt),          a!(No),             a!(No),             a!(No),          k!(Space),         a!(No),             a!(No),             a!(No),             k!(RAlt),        k!(RGui),         mo!(3),           k!(RCtrl),       k!(Left),             k!(Down),        k!(Right),          a!(No),          k!(Kp0),         k!(KpDot)      ]
+            [k!(LCtrl),       k!(LGui),           k!(LAlt),          df!(0),             df!(2),             a!(No),          k!(Space),         a!(No),             a!(No),             a!(No),             k!(RAlt),        k!(RGui),         mo!(3),           k!(RCtrl),       k!(Left),             k!(Down),        k!(Right),          a!(No),          k!(Kp0),         k!(KpDot)      ]
         ]),
 
         // Layer 3: Fn layer (Windows)
@@ -65,7 +65,7 @@ pub const fn get_default_keymap() -> [[[KeyAction; COL]; ROW]; NUM_LAYER] {
             [k!(RgbTog),      k!(RgbModeForward), k!(RgbVai),        k!(RgbVai),         k!(RgbHui),         k!(RgbSpi),      a!(Transparent),   a!(Transparent),    a!(Transparent),    a!(Transparent),    a!(Transparent), a!(Transparent),  a!(Transparent),  a!(Transparent), a!(Transparent),      a!(Transparent), a!(Transparent),    a!(Transparent), a!(Transparent), a!(Transparent)],
             [a!(Transparent), k!(RgbModeReverse), k!(RgbVad),        k!(RgbVad),         k!(RgbHud),         k!(RgbSpd),      a!(Transparent),   a!(Transparent),    a!(Transparent),    a!(Transparent),    a!(Transparent), a!(Transparent),  a!(Transparent),  a!(Transparent), a!(Transparent),      a!(Transparent), a!(Transparent),    a!(Transparent), a!(Transparent), a!(Transparent)],
             [a!(Transparent), a!(No),             a!(Transparent),   a!(Transparent),    a!(Transparent),    a!(Transparent), a!(No/*BattLvl*/), a!(Transparent),    a!(Transparent),    a!(Transparent),    a!(Transparent), a!(Transparent),  a!(No),           a!(Transparent), a!(No),               a!(Transparent), a!(No),             a!(Transparent), a!(Transparent), a!(Transparent)],
-            [a!(Transparent), a!(Transparent),    a!(Transparent),   a!(No),             a!(No),             a!(No),          a!(Transparent),   a!(No),             a!(No),             a!(No),             a!(Transparent), a!(Transparent),  a!(No),           a!(Transparent), a!(Transparent),      a!(Transparent), a!(Transparent),    a!(No),          a!(Transparent), a!(Transparent)]
+            [a!(Transparent), a!(Transparent),    a!(Transparent),   a!(Transparent),    a!(Transparent),    a!(No),          a!(Transparent),   a!(No),             a!(No),             a!(No),             a!(Transparent), a!(Transparent),  a!(No),           a!(Transparent), a!(Transparent),      a!(Transparent), a!(Transparent),    a!(No),          a!(Transparent), a!(Transparent)]
         ]),
     ]
 }

@@ -21,9 +21,11 @@
 mod macros;
 mod flash16k;
 mod keymap;
+mod layerswitch;
 mod vial;
 
 use crate::flash16k::Flash16K;
+use crate::layerswitch::LayerSwitch;
 use defmt::info;
 use embassy_executor::Spawner;
 use embassy_stm32::flash::Flash;
@@ -140,10 +142,14 @@ async fn main(_spawner: Spawner) {
     let mut matrix = Matrix::<_, _, _, ROW, COL, false>::new(row_pins, col_pins, debouncer);
     let mut keyboard = Keyboard::new(&keymap);
 
+    // Layer (Mac/Win) swith
+    let switch_pin = Input::new(p.PB12, Pull::Up);
+    let mut layer_switch = LayerSwitch::new(switch_pin);
+
     // Start
     join3(
         run_devices! (
-            (matrix, encoder) => EVENT_CHANNEL,
+            (matrix, encoder, layer_switch) => EVENT_CHANNEL,
         ),
         keyboard.run(),
         run_rmk(&keymap, driver, &mut storage, rmk_config),
